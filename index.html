@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -147,6 +147,156 @@
   </script>
 
   <script src="https://www.youtube.com/iframe_api"></script>
+
+</body>
+</html  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Boredom Killer Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f1020;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #instructions {
+      max-width: 420px;
+      background: rgba(255,255,255,0.08);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #game {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      background: #1c1d3a;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .box {
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #score {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      background: #ff4da6;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="container">
+
+    <h2>🎮 Boredom Killer Game</h2>
+
+    <div id="instructions">
+      <b>Instructions:</b><br>
+      🟢 Click green boxes to gain points<br>
+      🔴 Avoid red boxes (they reduce your score)<br>
+      The game gets faster over time<br>
+      and try to get the highest score possible anato 
+    </div>
+
+    <div id="game"></div>
+
+    <div id="score">Score: 0</div>
+
+    <button onclick="startGame()">Start</button>
+  </div>
+
+<script>
+let game = document.getElementById("game");
+let scoreText = document.getElementById("score");
+
+let score = 0;
+let speed = 1200;
+let interval;
+
+function randomPosition() {
+  return Math.floor(Math.random() * 340);
+}
+
+function spawnBox() {
+  let box = document.createElement("div");
+  box.classList.add("box");
+
+  let isGood = Math.random() > 0.5;
+
+  box.style.background = isGood ? "limegreen" : "red";
+  box.style.left = randomPosition() + "px";
+  box.style.top = randomPosition() + "px";
+
+  box.onclick = () => {
+    if (isGood) {
+      score++;
+    } else {
+      score -= 1;
+    }
+
+    scoreText.innerText = "Score: " + score;
+    box.remove();
+  };
+
+  game.appendChild(box);
+
+  setTimeout(() => {
+    box.remove();
+  }, speed - 200);
+}
+
+function startGame() {
+  score = 0;
+  speed = 1200;
+  scoreText.innerText = "Score: 0";
+
+  clearInterval(interval);
+
+  interval = setInterval(() => {
+    spawnBox();
+
+    if (speed > 400) {
+      speed -= 20;
+    }
+
+  }, speed);
+}
+</script>
 
 </body>
 </html>
