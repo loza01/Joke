@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Press Play 🎵</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #3a3a6a);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      transition: background 0.8s ease;
+    }
+
+    /* beat-like background animation */
+    body.beat {
+      animation: beatBg 1.2s infinite;
+    }
+
+    @keyframes beatBg {
+      0% { background: linear-gradient(135deg, #1e1e2f, #3a3a6a); }
+      25% { background: linear-gradient(135deg, #2b1e3a, #5a2e6a); }
+      50% { background: linear-gradient(135deg, #3a1e2f, #6a2e3f); }
+      75% { background: linear-gradient(135deg, #1e3a3a, #2e6a5a); }
+      100% { background: linear-gradient(135deg, #1e1e2f, #3a3a6a); }
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      max-width: 420px;
+      position: relative;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #ff4da6;
+      color: white;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      display: none;
+      animation: fadeIn 1s ease;
+    }
+
+    #countdown {
+      font-size: 60px;
+      margin-top: 20px;
+      font-weight: bold;
+      display: none;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    #player {
+      width: 1px;
+      height: 1px;
+      position: absolute;
+      left: -9999px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h2>Hey, press play 🎶</h2>
+    <button onclick="startCountdown()">Play</button>
+
+    <div id="countdown">3</div>
+    <div id="message">I like the music… and maybe I could dance salsa with it 💃</div>
+
+    <div id="player"></div>
+  </div>
+
+  <script>
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: 'gKuwCG7EYM8'
+      });
+    }
+
+    function startCountdown() {
+      const countdown = document.getElementById('countdown');
+      const message = document.getElementById('message');
+
+      let count = 3;
+      countdown.style.display = 'block';
+      message.style.display = 'none';
+
+      countdown.innerText = count;
+
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdown.innerText = count;
+        } else {
+          clearInterval(timer);
+          countdown.style.display = 'none';
+          message.style.display = 'block';
+
+          if (player) {
+            player.playVideo();
+          }
+
+          // start beat background
+          document.body.classList.add('beat');
+        }
+      }, 1000);
+    }
+  </script>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+</body>
+</html>
