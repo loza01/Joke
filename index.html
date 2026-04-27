@@ -1,302 +1,189 @@
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Press Play 🎵</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1e1e2f, #3a3a6a);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      overflow: hidden;
-      transition: background 0.8s ease;
-    }
-
-    /* beat-like background animation */
-    body.beat {
-      animation: beatBg 1.2s infinite;
-    }
-
-    @keyframes beatBg {
-      0% { background: linear-gradient(135deg, #1e1e2f, #3a3a6a); }
-      25% { background: linear-gradient(135deg, #2b1e3a, #5a2e6a); }
-      50% { background: linear-gradient(135deg, #3a1e2f, #6a2e3f); }
-      75% { background: linear-gradient(135deg, #1e3a3a, #2e6a5a); }
-      100% { background: linear-gradient(135deg, #1e1e2f, #3a3a6a); }
-    }
-
-    .card {
-      background: rgba(255,255,255,0.1);
-      padding: 30px;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 420px;
-      position: relative;
-      animation: fadeIn 1s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      background: #ff4da6;
-      color: white;
-      transition: transform 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-    }
-
-    #message {
-      margin-top: 20px;
-      font-size: 18px;
-      display: none;
-      animation: fadeIn 1s ease;
-    }
-
-    #countdown {
-      font-size: 60px;
-      margin-top: 20px;
-      font-weight: bold;
-      display: none;
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    #player {
-      width: 1px;
-      height: 1px;
-      position: absolute;
-      left: -9999px;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="card">
-    <h2>Hey, press play 🎶</h2>
-    <button onclick="startCountdown()">Play</button>
-
-    <div id="countdown">3</div>
-    <div id="message">I like the music… and maybe I could dance salsa with it 💃</div>
-
-    <div id="player"></div>
-  </div>
-
-  <script>
-    let player;
-
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        videoId: 'gKuwCG7EYM8'
-      });
-    }
-
-    function startCountdown() {
-      const countdown = document.getElementById('countdown');
-      const message = document.getElementById('message');
-
-      let count = 3;
-      countdown.style.display = 'block';
-      message.style.display = 'none';
-
-      countdown.innerText = count;
-
-      const timer = setInterval(() => {
-        count--;
-        if (count > 0) {
-          countdown.innerText = count;
-        } else {
-          clearInterval(timer);
-          countdown.style.display = 'none';
-          message.style.display = 'block';
-
-          if (player) {
-            player.playVideo();
-          }
-
-          // start beat background
-          document.body.classList.add('beat');
-        }
-      }, 1000);
-    }
-  </script>
-
-  <script src="https://www.youtube.com/iframe_api"></script>
-
-</body>
-</html  -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Boredom Killer Game</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f1020;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Hub Fixed</title>
+<script src="https://cdn.tailwindcss.com"></script>
 
-    #container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<style>
+.hidden { display:none; }
 
-    #instructions {
-      max-width: 420px;
-      background: rgba(255,255,255,0.08);
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 15px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    #game {
-      position: relative;
-      width: 400px;
-      height: 400px;
-      background: #1c1d3a;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .box {
-      width: 60px;
-      height: 60px;
-      position: absolute;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    #score {
-      margin-top: 20px;
-      font-size: 20px;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 10px;
-      background: #ff4da6;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+.box {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
 </head>
 
-<body>
+<body class="bg-gray-900 text-white">
 
-  <div id="container">
+<!-- ================= MENU ================= -->
+<div id="menu" class="p-6 text-center space-y-4">
+  <h1 class="text-3xl font-bold">🎮 Game Hub</h1>
 
-    <h2>🎮 Game for Henok hahaha</h2>
+  <button onclick="openGame('music')" class="bg-pink-500 p-3 w-full rounded">🎵 Music Game</button>
+  <button onclick="openGame('click')" class="bg-blue-500 p-3 w-full rounded">🎯 Click Game</button>
+</div>
 
-    <div id="instructions">
-      <b>Instructions:</b><br>
-      🟢 Click green boxes to gain points<br>
-      🔴 Avoid red boxes (they reduce your score)<br>
-      The game gets faster over time<br>
-      and try to get the highest score possible anato 
-    </div>
+<!-- ================= MUSIC GAME (FIXED CENTERED) ================= -->
+<div id="music" class="hidden flex flex-col items-center justify-center min-h-screen space-y-6 text-center">
 
-    <div id="game"></div>
+<button onclick="back()" class="bg-gray-700 p-2 rounded">⬅ Back</button>
 
-    <div id="score">Score: 0</div>
+<h2 class="text-xl">🎵 Press Play</h2>
 
-    <button onclick="startGame()">Start</button>
-  </div>
+<!-- ✅ ONLY ONE PLAYER + PROPER CENTERING -->
+<div class="flex justify-center w-full">
+  <div id="player" class="w-[320px] h-[180px] md:w-[480px] md:h-[270px]"></div>
+</div>
+
+<div id="countdown" class="text-6xl hidden font-bold"></div>
+
+<div id="message" class="hidden text-lg">
+I like the music… maybe I could dance salsa to it 💃
+</div>
+
+<button onclick="startMusic()" class="bg-pink-500 p-2 rounded">Play</button>
+
+</div>
+
+<!-- ================= CLICK GAME ================= -->
+<div id="click" class="hidden text-center p-6">
+
+<button onclick="back()" class="bg-gray-700 p-2 mb-3">⬅ Back</button>
+
+<h2>🎯 Click Game</h2>
+<p>Score: <span id="score">0</span></p>
+
+<div id="game" class="relative w-96 h-96 bg-gray-800 mx-auto mt-3 rounded"></div>
+
+<button onclick="startClickGame()" class="bg-blue-500 p-2 mt-3">Start</button>
+
+</div>
+
+<!-- ================= RPG ================= -->
+<div id="rpg" class="hidden p-6 text-center space-y-3">
+
+<button onclick="back()" class="bg-gray-700 p-2">⬅ Back</button>
+
+<h2>⚔️ RPG Mode</h2>
+
+<p id="rpgText">Press start to enter dungeon</p>
+
+<button onclick="startRPG()" class="bg-green-500 p-2">Start RPG</button>
+
+</div>
 
 <script>
-let game = document.getElementById("game");
-let scoreText = document.getElementById("score");
 
-let score = 0;
-let speed = 1200;
-let interval;
-
-function randomPosition() {
-  return Math.floor(Math.random() * 340);
+/* ================= NAVIGATION ================= */
+function openGame(id){
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById(id).classList.remove("hidden");
 }
 
-function spawnBox() {
-  let box = document.createElement("div");
+function back(){
+  document.querySelectorAll("#music,#click,#rpg").forEach(e => e.classList.add("hidden"));
+  document.getElementById("menu").classList.remove("hidden");
+}
+
+/* ================= MUSIC GAME ================= */
+let player;
+
+function onYouTubeIframeAPIReady(){
+  player = new YT.Player('player', {
+    videoId: 'gKuwCG7EYM8'
+  });
+}
+
+function startMusic(){
+  const countdown = document.getElementById("countdown");
+  const message = document.getElementById("message");
+
+  message.classList.add("hidden");
+  countdown.classList.remove("hidden");
+
+  let count = 3;
+  countdown.innerText = count;
+
+  let timer = setInterval(() => {
+    count--;
+
+    if(count > 0){
+      countdown.innerText = count;
+    } else {
+      clearInterval(timer);
+
+      countdown.classList.add("hidden");
+      message.classList.remove("hidden");
+
+      if(player && player.playVideo){
+        player.playVideo();
+      }
+    }
+  }, 1000);
+}
+
+/* ================= CLICK GAME ================= */
+let score = 0;
+let interval;
+
+function startClickGame(){
+  score = 0;
+  document.getElementById("score").innerText = score;
+  document.getElementById("game").innerHTML = "";
+
+  clearInterval(interval);
+  interval = setInterval(spawnBox, 800);
+}
+
+function spawnBox(){
+  const game = document.getElementById("game");
+
+  const box = document.createElement("div");
   box.classList.add("box");
 
-  let isGood = Math.random() > 0.5;
+  const good = Math.random() > 0.5;
 
-  box.style.background = isGood ? "limegreen" : "red";
-  box.style.left = randomPosition() + "px";
-  box.style.top = randomPosition() + "px";
+  box.style.background = good ? "limegreen" : "red";
+  box.style.left = Math.random()*300 + "px";
+  box.style.top = Math.random()*300 + "px";
 
   box.onclick = () => {
-    if (isGood) {
-      score++;
-    } else {
-      score -= 1;
-    }
-
-    scoreText.innerText = "Score: " + score;
+    score += good ? 1 : -1;
+    document.getElementById("score").innerText = score;
     box.remove();
   };
 
   game.appendChild(box);
 
-  setTimeout(() => {
-    box.remove();
-  }, speed - 200);
+  setTimeout(() => box.remove(), 1000);
 }
 
-function startGame() {
-  score = 0;
-  speed = 1200;
-  scoreText.innerText = "Score: 0";
-
-  clearInterval(interval);
-
-  interval = setInterval(() => {
-    spawnBox();
-
-    if (speed > 400) {
-      speed -= 20;
-    }
-
-  }, speed);
+/* ================= RPG ================= */
+function startRPG(){
+  document.getElementById("rpgText").innerText =
+    "⚔️ You entered a dungeon... (RPG expansion ready next)";
 }
+
 </script>
 
+<script src="https://www.youtube.com/iframe_api"></script>
+<a href="game2.html"
+   class="fixed top-4 left-4 w-110 h-10 flex items-center justify-center
+          bg-white/20 hover:bg-white/40 rounded-full
+          backdrop-blur-md border border-white/30 shadow-lg">
+   Paly Game 2
+</a>
+<a href="game2.html"
+   class="fixed top-4 left-4 w-110 h-10 flex items-center justify-center
+          bg-white/20 hover:bg-white/40 rounded-full
+          backdrop-blur-md border border-white/30 shadow-lg">
+   Paly Game 2
+</a>
 </body>
 </html>

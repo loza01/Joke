@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GunShout Duel Ultimate</title>
+<style>
+body {margin:0;font-family:Arial;background:#0f172a;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}
+.game {width:700px;max-width:95%;background:#1e293b;padding:20px;border-radius:16px;text-align:center;position:relative;overflow:hidden;}
+.status{margin:10px;font-size:20px;}
+button{padding:10px 20px;margin:5px;border:none;border-radius:8px;cursor:pointer}
+.start{background:#22c55e}
+.shoot{background:#ef4444}
+.shoot:disabled{background:#555}
+.result{font-size:22px;margin-top:10px}
+
+/* Characters */
+.character{position:absolute;bottom:50px;width:80px;height:120px;background:#94a3b8;border-radius:10px;display:flex;justify-content:center;align-items:center;font-size:40px;}
+.player{left:30px}
+.enemy{right:30px}
+
+/* Bullet */
+.bullet{position:absolute;width:10px;height:4px;background:yellow;top:120px;left:100px;display:none}
+
+/* animations */
+.shootAnim{animation:shoot 0.3s}
+@keyframes shoot{0%{transform:translateX(0)}50%{transform:translateX(10px)}100%{transform:translateX(0)}}
+
+.bulletMove{display:block;animation:bulletMove 0.4s linear forwards}
+@keyframes bulletMove{0%{left:120px}100%{left:85%}}
+
+.enemyBulletMove{display:block;animation:enemyBullet 0.4s linear forwards}
+@keyframes enemyBullet{0%{right:120px}100%{right:85%}}
+
+</style>
+</head>
+<body>
+<div class="game" id="game">
+
+<h2>🔫 GunShout Ultimate</h2>
+<div class="status" id="status">Press Start</div>
+
+<button class="start" onclick="startGame()">Start</button>
+<button class="shoot" id="shootBtn" onclick="playerShoot()" disabled>Shoot</button>
+
+<div class="result" id="result"></div>
+<div>Score: <span id="score">0</span> | Streak: <span id="streak">0</span></div>
+
+<div class="character player" id="player">🤠</div>
+<div class="character enemy" id="enemy">🤖</div>
+<div class="bullet" id="bullet"></div>
+
+</div>
+
+<script>
+let canShoot=false,gameActive=false,startTime=0;
+let playerTime=0,enemyTime=0;
+let score=0,streak=0;
+let aiSpeed=600;
+
+// sound
+const gunSound=new Audio("https://actions.google.com/sounds/v1/impacts/gunshot.ogg");
+const echoSound=new Audio("https://actions.google.com/sounds/v1/ambiences/warehouse_echo.ogg");
+
+function playShot(){gunSound.currentTime=0;gunSound.play();setTimeout(()=>echoSound.play(),100)}
+
+function startGame(){
+  document.getElementById('result').innerText="";
+  document.getElementById('status').innerText="Get ready...";
+  document.getElementById('shootBtn').disabled=true;
+  canShoot=false;gameActive=true;
+
+  let delay=Math.random()*2000+1500;
+
+  setTimeout(()=>{
+    document.getElementById('status').innerText="🔥 GO!";
+    canShoot=true;
+    startTime=Date.now();
+    document.getElementById('shootBtn').disabled=false;
+
+    // adaptive AI
+    let compDelay=Math.random()*aiSpeed;
+    setTimeout(enemyShoot,compDelay);
+
+  },delay);
+}
+
+function playerShoot(){
+  if(!canShoot){lose("Too early!");return}
+  if(!gameActive)return;
+
+  playerTime=Date.now();
+  animateShot('player');
+  check();
+}
+
+function enemyShoot(){
+  if(!gameActive)return;
+  enemyTime=Date.now();
+  animateShot('enemy');
+  check();
+}
+
+function animateShot(side){
+  playShot();
+  let bullet=document.getElementById('bullet');
+  if(side==='player'){
+    bullet.style.left='120px';
+    bullet.className='bullet bulletMove';
+    document.getElementById('player').classList.add('shootAnim');
+  }else{
+    bullet.style.left='auto';
+    bullet.style.right='120px';
+    bullet.className='bullet enemyBulletMove';
+    document.getElementById('enemy').classList.add('shootAnim');
+  }
+}
+
+function check(){
+  if(!playerTime||!enemyTime)return;
+
+  gameActive=false;
+  document.getElementById('shootBtn').disabled=true;
+
+  let p=playerTime-startTime;
+  let e=enemyTime-startTime;
+
+  if(p<e){
+    score++;streak++;
+    aiSpeed=Math.max(200,aiSpeed-20); // smarter AI
+    win(`You win (${p}ms vs ${e}ms)`);
+  }else{
+    streak=0;
+    aiSpeed+=30;
+    lose(`Computer wins (${e}ms vs ${p}ms)`);
+  }
+
+  updateUI();
+}
+
+function win(msg){document.getElementById('result').innerText="🏆 "+msg}
+function lose(msg){gameActive=false;document.getElementById('result').innerText="💀 "+msg;streak=0;updateUI()}
+
+function updateUI(){
+  document.getElementById('score').innerText=score;
+  document.getElementById('streak').innerText=streak;
+  document.getElementById('status').innerText="Press Start";
+}
+
+// mobile tap anywhere
+document.body.addEventListener('touchstart',()=>{
+  if(!document.getElementById('shootBtn').disabled)playerShoot();
+});
+
+</script>
+</body>
+</html>
