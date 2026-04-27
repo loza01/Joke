@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ping Pong Pro</title>
+<style>
+body {margin:0;background:#f5f1e8; /* cream crystal */ display:flex;justify-content:center;align-items:center;height:100vh;color:#111;font-family:Arial;flex-direction:column}
+canvas {border:2px solid aqua;background:black;box-shadow:0 20px 50px rgba(0,0,0,0.25), 0 0 30px rgba(0,255,255,0.35);border-radius:10px}
+.controls{margin-top:10px}
+button{padding:8px 15px;margin:5px;border:none;border-radius:6px;cursor:pointer}
+.start{background:aqua;color:black}
+.pause{background:gray;color:white}
+</style>
+</head>
+<body>
+
+<h2>🏓 Ping Pong Duel</h2>
+<div>🧍 Human (Left) vs 🤖 Computer (Right)</div>
+<canvas id="game" width="800" height="500"></canvas>
+<div class="controls">
+  <button class="start" onclick="startGame()">▶ Start</button>
+  <button class="pause" onclick="pauseGame()">⏸ Pause</button>
+</div>
+<div id="info">Score: 0 | Fail: 0 | Round: 1</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+let running=false;
+let score=0,fail=0,round=1;
+
+const paddleH=100,paddleW=10;
+let playerY=200,aiY=200;
+
+let ballX=400,ballY=250;
+let speedX=5,speedY=4;
+
+canvas.addEventListener('mousemove',(e)=>{
+ if(!running)return;
+ const rect=canvas.getBoundingClientRect();
+ playerY=e.clientY-rect.top-paddleH/2;
+});
+
+function startGame(){running=true}
+function pauseGame(){running=false}
+
+function drawBall(){
+ let grad=ctx.createRadialGradient(ballX,ballY,2,ballX,ballY,10);
+ grad.addColorStop(0,'white');
+ grad.addColorStop(1,'aqua');
+ ctx.fillStyle=grad;
+ ctx.beginPath();
+ ctx.arc(ballX,ballY,10,0,Math.PI*2);
+ ctx.fill();
+}
+
+function draw(){
+ ctx.fillStyle='black';
+ ctx.fillRect(0,0,800,500);
+
+ // paddles
+ // Labels
+ ctx.fillStyle='white';
+ ctx.font='14px Arial';
+ ctx.fillText('HUMAN', 20, 20);
+ ctx.fillText('COMPUTER', 680, 20);
+ ctx.fillStyle='aqua';
+ ctx.fillRect(10,playerY,paddleW,paddleH);
+ ctx.fillRect(780,aiY,paddleW,paddleH);
+
+ drawBall();
+}
+
+function update(){
+ if(!running)return;
+
+ ballX+=speedX;
+ ballY+=speedY;
+
+ // walls
+ if(ballY<0||ballY>500)speedY*=-1;
+
+ // player hit
+ if(ballX<20 && ballY>playerY && ballY<playerY+paddleH){
+   speedX*=-1; score++;
+ }
+
+ // ai hit
+ if(ballX>780 && ballY>aiY && ballY<aiY+paddleH){
+   speedX*=-1;
+ }
+
+ // miss
+ if(ballX<0){
+   fail++; reset();
+ }
+ if(ballX>800){
+   score++; round++; reset();
+ }
+
+ // smarter AI
+ aiY += (ballY-(aiY+paddleH/2))*0.08;
+
+ document.getElementById('info').innerText=
+  `Score: ${score} | Fail: ${fail} | Round: ${round}`;
+}
+
+function reset(){
+ ballX=400;ballY=250;
+ speedX = (Math.random()>0.5?5:-5);
+ speedY = 4;
+}
+
+function loop(){
+ update();
+ draw();
+ requestAnimationFrame(loop);
+}
+loop();
+</script>
+<a href="game2.html"
+   class="fixed top-4 left-4 w-110 h-10 flex items-center justify-center
+          bg-white/20 hover:bg-white/40 rounded-full
+          backdrop-blur-md border border-white/30 shadow-lg">
+   Paly Game 2
+</a>
+<a href="index.html"
+   class="fixed top-4 left-4 w-110 h-10 flex items-center justify-center
+          bg-white/20 hover:bg-white/40 rounded-full
+          backdrop-blur-md border border-white/30 shadow-lg">
+   Home
+</a>
+</body>
+</html>
